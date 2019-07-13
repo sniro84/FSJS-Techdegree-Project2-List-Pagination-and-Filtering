@@ -84,12 +84,12 @@ function appendPageLinks(list)
 ***/
 function getRequiredPages(list)
 {
-   // assuming the list length divided by the max items per page has no remainder. 
+   // assume by default that the list length divided by the max items per page has no remainder. 
    let result = list.length / MAX_ITEMS_PER_PAGE;
 
-   // in case the list length divided by the max items per page has a remainder.   
+   // in case the list length divided by the max items per page HAS a remainder.   
    if (list.length % MAX_ITEMS_PER_PAGE !== 0)
-      result = parseInt(Math.ceil(result));         // updating result.
+      result = parseInt(Math.ceil(result));         // result needs to be updated.
 
    // result now stores the correct value.   
    return result;   
@@ -110,5 +110,8 @@ function activateLink(links, targetLink)
   targetLink.classList.add('active');
 }
 
+// show first page by default.
 showPage(studentsList,1);
+
+// append the page links to the screen.
 appendPageLinks(studentsList);
