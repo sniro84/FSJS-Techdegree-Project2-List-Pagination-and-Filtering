@@ -28,6 +28,7 @@ function showPage(list, page)
     }              
 }
 
+
 /*** 
    This function recieves a list and adds  
    functionality to the pagination buttons.
@@ -98,6 +99,7 @@ function getRequiredPages(list)
    return result;   
 }
 
+
 /*** 
    This helper function recieves an array of links and a target link.
    the function activates the target link and deactivates the rest
@@ -112,6 +114,7 @@ function activateLink(links, targetLink)
   // activation of target link.    
   targetLink.classList.add('active');
 }
+
 
 /*** 
    This helper function dynamically adds a search button and a text field to the screen.  
@@ -146,14 +149,13 @@ function appendSearchElements()
 
    // add event listeners
    searchButton.addEventListener('click', (event) => {
-      handleEvent(input,messageHeader);       
-    });
-
-    input.addEventListener('keyup', (event) => { 
+      handleEvent(input,messageHeader);      
+   });
+   input.addEventListener('keyup', (event) => { 
       handleEvent(input,messageHeader);
-    });
-  
+   });
 }
+
 
 function handleEvent(input, messageHeader)
 {
@@ -237,7 +239,5 @@ function reset()
 // show first page by default.
 showPage(studentsList,1);
 
-// append the page links to the screen.
 appendPageLinks(studentsList);
-
 appendSearchElements();
