@@ -43,7 +43,11 @@ body{
       color: #fff
     }
 
-.student-list{}
+    .page-header .student-search h3 {
+      padding: 8px 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
 
   .student-item{
     margin: 0 0 20px 0;

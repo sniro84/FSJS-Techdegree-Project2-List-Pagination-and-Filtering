@@ -126,12 +126,12 @@ function activateLink(links, targetLink)
 
 function appendSearch()
 {
-   const ul = document.querySelector('ul.student-list');
-   const parentDiv = ul.parentNode;
    const searchDiv = document.createElement('div');
-   searchDiv.className = "page-header";
    searchDiv.className = "student-search";
-   parentDiv.insertBefore(searchDiv, ul);
+   
+   const pageHeaderDiv = document.querySelector('div.page-header');
+   const h2 = document.querySelector('div.page-header > h2');
+   pageHeaderDiv.insertBefore(searchDiv,h2);
 
    const input = document.createElement('input');
    input.placeholder = "Search for students...";
@@ -141,35 +141,52 @@ function appendSearch()
    searchButton.textContent = "Search";
    searchDiv.appendChild(searchButton);
 
-   searchDiv.align = "right";
-
-   const h5 = document.createElement('h5');
-      searchDiv.appendChild(h5);  
-      let messageToUser = "";
-      h5.innerText = messageToUser;
+   const h3 = document.createElement('h3');
+   searchDiv.appendChild(h3);  
+   h3.innerText = "";
 
    searchButton.addEventListener('click', (event) => {
       event.preventDefault();
-   
-      let results = 0;
+      handleEvent(input,h3);
+            
+    });
+
+    input.addEventListener('keyup', (event) => { 
+      event.preventDefault();
+      handleEvent(input,h3);
+    });
+  
+}
+
+function handleEvent(input, messageHeader)
+{
+   let results = 0;
       
       if (input.value.length !== 0)
          results = searchForItem(input, studentsList);
       
       if (results === 0)
-      {
-         messageToUser = "No results were found.";
-         h5.innerText = messageToUser;
-      }
+         messageHeader.innerText =  "No results were found.";
       else
+         messageHeader.innerText = "" + results + " results were found";
+
+      if (input.value === "")
       {
-         messageToUser = "" + results + " results were found";
-         h5.innerText = messageToUser;
-      }
-            
- 
-    });
-  
+         try
+         {
+            clearPage();
+            deletePageLinks();
+          }
+           catch(error) 
+            {
+              console.log("trying to delete links (page numbers) that doesn't exist." + 
+                    "It happend because the last search resulted in 0 matches"); 
+          }
+
+          showPage(studentsList,1);
+           appendPageLinks(studentsList);
+      } 
+      
 }
 
 function searchForItem(searchInput, items)
@@ -208,7 +225,6 @@ function searchForItem(searchInput, items)
                     "It happend because the last search resulted in 0 matches"); 
    } 
    
-
    if (matchItems.length !== 0)
    {
       showPage(matchItems,1);
@@ -217,7 +233,6 @@ function searchForItem(searchInput, items)
    
    return matchItems.length;
 }
-
 
 
 function deletePageLinks() 
