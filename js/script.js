@@ -156,56 +156,74 @@ function appendSearchElements()
    });
 }
 
-
+/*** 
+   This helper function handles user experience.  
+***/
 function handleEvent(input, messageHeader)
 {
    event.preventDefault();
-   let results = 0;
-      
-      if (input.value.length !== 0)
-         results = searchForItem(input, studentsList);
-      
-      if (results === 0)
-         messageHeader.innerText =  "No results were found.";
-      else
-         messageHeader.innerText = "" + results + " results were found";
 
-      if (input.value === "")
-      {
-         reset();
+   // initialize results counter.
+   let results = 0;  
+   
+   // input text field contains at least one character.
+   if (input.value.length !== 0)  
+      results = searchForItem(input, studentsList);   // search the item
+   
+   // sends results to the user     
+   if (results === 0)
+      messageHeader.innerText =  "No results were found.";
+   else
+      messageHeader.innerText = "" + results + " results were found";
 
-         showPage(studentsList,1);
-         appendPageLinks(studentsList);
-      } 
-      
+   // text has been deleted from the input text field --> show original list.  
+   if (input.value === "")
+   {
+      reset();
+      showPage(studentsList,1);
+      appendPageLinks(studentsList);
+   }       
 }
 
+/*** 
+   This function searches for string in a list of items and returns the
+   number of matches found on the list. The function recieves an input
+   text field with a string to search for and the list of items to search in. 
+***/
 function searchForItem(searchInput, items)
 {
-   const matchItems = [];
+   // container for items that matches the input 
+   const matchItems = [];  
+
    for(let i=0; i<items.length; i++)
    {
+      // turn text from the input text field to lowercase. 
       const inputString = searchInput.value.toLowerCase();
 
-      const h3 = items[i].querySelector('div.student-details > h3');
+      // extract ONLY the name of the item 
+      const h3 = items[i].querySelector('div > h3');
       const itemNameString = h3.innerText.toLowerCase(); 
       
+      // a boolean variable that equals true if text field is empty.
       const emptyString = (searchInput.value.length === 0);
       
+      // a boolean variable that equals true if at least one match has been found. 
       const containsInput = (itemNameString.search(inputString) !== -1);    
 
+      // if matches were found, insert matched item to container.
       if (!emptyString && containsInput)
          matchItems.push(items[i]);                
    }
 
-   reset();
-   
+   // paginate results for matched items results (reload page)
+   reset();   
    if (matchItems.length !== 0)
    {
       showPage(matchItems,1);
       appendPageLinks(matchItems);
    }
    
+   // return the number of results found.
    return matchItems.length;
 }
 
@@ -236,8 +254,8 @@ function reset()
    }
 }
 
-// show first page by default.
+// show original list by default.
 showPage(studentsList,1);
-
 appendPageLinks(studentsList);
+// add search elements.
 appendSearchElements();
