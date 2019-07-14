@@ -2,8 +2,11 @@
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
-   
+
+// number of maximum items on each page
 const MAX_ITEMS_PER_PAGE = 10;
+
+// a list of students  
 const studentsList = document.querySelectorAll('li.student-item');
 
 
@@ -74,21 +77,7 @@ function appendPageLinks(list)
             activateLink(links, targetLink);    // activate target link and deactivate the rest of them.
          });
    }
-
 }
-
-function clearPage()
-{
-   for(let i=0; i<studentsList.length; i++)
-      studentsList[i].style.display = 'none';
-}
-
-function deletePageLinks()
-{
-   const containerDiv = document.querySelector('div.pagination');
-   containerDiv.remove();
-}
-
 
 
 /*** 
@@ -124,42 +113,51 @@ function activateLink(links, targetLink)
   targetLink.classList.add('active');
 }
 
-function appendSearch()
+/*** 
+   This helper function dynamically adds a search button and a text field to the screen.  
+***/
+function appendSearchElements()
 {
+   // create search div element and give it a class name.
    const searchDiv = document.createElement('div');
    searchDiv.className = "student-search";
    
+   // select header and its parent div
    const pageHeaderDiv = document.querySelector('div.page-header');
    const h2 = document.querySelector('div.page-header > h2');
+
+   // insert the search div element.
    pageHeaderDiv.insertBefore(searchDiv,h2);
 
+   // create text field and add it to the search div
    const input = document.createElement('input');
    input.placeholder = "Search for students...";
    searchDiv.appendChild(input);
 
+   // create search button and add it to the search div
    const searchButton = document.createElement('button');
    searchButton.textContent = "Search";
    searchDiv.appendChild(searchButton);
 
-   const h3 = document.createElement('h3');
-   searchDiv.appendChild(h3);  
-   h3.innerText = "";
+   // create a header to contain the message for the user
+   const messageHeader = document.createElement('h3');
+   searchDiv.appendChild(messageHeader);  
+   messageHeader.innerText = "";
 
+   // add event listeners
    searchButton.addEventListener('click', (event) => {
-      event.preventDefault();
-      handleEvent(input,h3);
-            
+      handleEvent(input,messageHeader);       
     });
 
     input.addEventListener('keyup', (event) => { 
-      event.preventDefault();
-      handleEvent(input,h3);
+      handleEvent(input,messageHeader);
     });
   
 }
 
 function handleEvent(input, messageHeader)
 {
+   event.preventDefault();
    let results = 0;
       
       if (input.value.length !== 0)
@@ -172,19 +170,10 @@ function handleEvent(input, messageHeader)
 
       if (input.value === "")
       {
-         try
-         {
-            clearPage();
-            deletePageLinks();
-          }
-           catch(error) 
-            {
-              console.log("trying to delete links (page numbers) that doesn't exist." + 
-                    "It happend because the last search resulted in 0 matches"); 
-          }
+         reset();
 
-          showPage(studentsList,1);
-           appendPageLinks(studentsList);
+         showPage(studentsList,1);
+         appendPageLinks(studentsList);
       } 
       
 }
@@ -194,7 +183,6 @@ function searchForItem(searchInput, items)
    const matchItems = [];
    for(let i=0; i<items.length; i++)
    {
-
       const inputString = searchInput.value.toLowerCase();
 
       const h3 = items[i].querySelector('div.student-details > h3');
@@ -204,26 +192,11 @@ function searchForItem(searchInput, items)
       
       const containsInput = (itemNameString.search(inputString) !== -1);    
 
-
       if (!emptyString && containsInput)
-      {
-         matchItems.push(items[i]);
-         console.log("found a match" + "in name : " + itemNameString);
-      }
-                
+         matchItems.push(items[i]);                
    }
-   console.log(matchItems);
 
-   try
-   {
-      clearPage();
-      deletePageLinks();
-   }
-   catch(error) 
-   {
-       console.log("trying to delete links (page numbers) that doesn't exist." + 
-                    "It happend because the last search resulted in 0 matches"); 
-   } 
+   reset();
    
    if (matchItems.length !== 0)
    {
@@ -235,12 +208,31 @@ function searchForItem(searchInput, items)
 }
 
 
-function deletePageLinks() 
+function clearPage()
 {
-   const ul = document.querySelector('div.pagination');
-      ul.remove();
+   for(let i=0; i<studentsList.length; i++)
+      studentsList[i].style.display = 'none';
 }
 
+function deletePageLinks()
+{
+   const containerDiv = document.querySelector('div.pagination');
+   containerDiv.remove();
+}
+
+function reset()
+{
+   clearPage();
+   try
+   {
+      deletePageLinks();
+   }
+   catch(error) 
+   {
+       console.log("trying to delete links (page numbers) that doesn't exist." + 
+                    "It happend because the last search resulted in 0 matches"); 
+   }
+}
 
 // show first page by default.
 showPage(studentsList,1);
@@ -248,5 +240,4 @@ showPage(studentsList,1);
 // append the page links to the screen.
 appendPageLinks(studentsList);
 
-
-appendSearch();
+appendSearchElements();
