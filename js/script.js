@@ -219,6 +219,7 @@ function handleEvent(input, messageHeader)
    // text has been deleted from the input text field --> show original list.  
    if (input.value === "")
    {
+      messageHeader.innerText = "";
       refreshPage();
       showPage(studentsList,1);
       appendPageLinks(studentsList);
