@@ -1,14 +1,16 @@
 /******************************************
-Treehouse Techdegree:
-FSJS project 2 - List Filter and Pagination
+Treehouse FSJS Techdegree:
+project 2 - List Filter and Pagination
+Name: Snir Holland
+Date: 15/07/2019
 ******************************************/
+
 
 // number of maximum items on each page
 const MAX_ITEMS_PER_PAGE = 10;
 
 // a list of students  
 const studentsList = document.querySelectorAll('li.student-item');
-
 
 /*** 
    This function recieves a list and a page number
@@ -27,7 +29,6 @@ function showPage(list, page)
             list[i].style.display = 'none';     
     }              
 }
-
 
 /*** 
    This function recieves a list and adds  
@@ -110,7 +111,7 @@ function searchForItem(searchInput, items)
          matchItems.push(items[i]);                
    }
 
-   // paginate results for matched items results (reload page)
+   // paginate results for matched items results. 
    refreshPage();   
    if (matchItems.length !== 0)
    {
@@ -140,7 +141,6 @@ function getRequiredPages(list)
    return result;   
 }
 
-
 /*** 
    This helper function recieves an array of links and a target link.
    the function activates the target link and deactivates the rest
@@ -155,7 +155,6 @@ function activateLink(links, targetLink)
   // activation of target link.    
   targetLink.classList.add('active');
 }
-
 
 /*** 
    This helper function dynamically adds a search button and a text field to the screen.  
