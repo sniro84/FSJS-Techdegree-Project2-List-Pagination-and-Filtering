@@ -80,6 +80,47 @@ function appendPageLinks(list)
    }
 }
 
+/*** 
+   This function searches for string in a list of items and returns the
+   number of matches found on the list. The function recieves an input
+   text field with a string to search for and the list of items to search in. 
+***/
+function searchForItem(searchInput, items)
+{
+   // container for items that matches the input 
+   const matchItems = [];  
+
+   for(let i=0; i<items.length; i++)
+   {
+      // turn text from the input text field to lowercase. 
+      const inputString = searchInput.value.toLowerCase();
+
+      // extract ONLY the name of the item 
+      const h3 = items[i].querySelector('div > h3');
+      const itemNameString = h3.innerText.toLowerCase(); 
+      
+      // a boolean variable that equals true if text field is empty.
+      const emptyString = (searchInput.value.length === 0);
+      
+      // a boolean variable that equals true if at least one match has been found. 
+      const containsInput = (itemNameString.search(inputString) !== -1);    
+
+      // if matches were found, insert matched item to container.
+      if (!emptyString && containsInput)
+         matchItems.push(items[i]);                
+   }
+
+   // paginate results for matched items results (reload page)
+   refreshPage();   
+   if (matchItems.length !== 0)
+   {
+      showPage(matchItems,1);
+      appendPageLinks(matchItems);
+   }
+   
+   // return the number of results found.
+   return matchItems.length;
+}
 
 /*** 
    This helper function recieves a list and returns  
@@ -174,88 +215,57 @@ function handleEvent(input, messageHeader)
    if (results === 0)
       messageHeader.innerText =  "No results were found.";
    else
-      messageHeader.innerText = "" + results + " results were found";
+      messageHeader.innerText = "" + results + " results were found.";
 
    // text has been deleted from the input text field --> show original list.  
    if (input.value === "")
    {
-      reset();
+      refreshPage();
       showPage(studentsList,1);
       appendPageLinks(studentsList);
    }       
 }
 
 /*** 
-   This function searches for string in a list of items and returns the
-   number of matches found on the list. The function recieves an input
-   text field with a string to search for and the list of items to search in. 
+   This helper function hides all of the students on the list.  
 ***/
-function searchForItem(searchInput, items)
-{
-   // container for items that matches the input 
-   const matchItems = [];  
-
-   for(let i=0; i<items.length; i++)
-   {
-      // turn text from the input text field to lowercase. 
-      const inputString = searchInput.value.toLowerCase();
-
-      // extract ONLY the name of the item 
-      const h3 = items[i].querySelector('div > h3');
-      const itemNameString = h3.innerText.toLowerCase(); 
-      
-      // a boolean variable that equals true if text field is empty.
-      const emptyString = (searchInput.value.length === 0);
-      
-      // a boolean variable that equals true if at least one match has been found. 
-      const containsInput = (itemNameString.search(inputString) !== -1);    
-
-      // if matches were found, insert matched item to container.
-      if (!emptyString && containsInput)
-         matchItems.push(items[i]);                
-   }
-
-   // paginate results for matched items results (reload page)
-   reset();   
-   if (matchItems.length !== 0)
-   {
-      showPage(matchItems,1);
-      appendPageLinks(matchItems);
-   }
-   
-   // return the number of results found.
-   return matchItems.length;
-}
-
-
-function clearPage()
+function hideStudents()
 {
    for(let i=0; i<studentsList.length; i++)
       studentsList[i].style.display = 'none';
 }
 
-function deletePageLinks()
+/*** 
+   This helper function deletes the links which are currently displayed.  
+***/
+function hideLinks()
 {
    const containerDiv = document.querySelector('div.pagination');
    containerDiv.remove();
 }
 
-function reset()
+/*** 
+   This helper function refreshes the page.  
+***/
+function refreshPage()
 {
-   clearPage();
+   hideStudents();
+
+   // trying to access links (page numbers) that doesn't exist.
+   // It happend because the last search resulted in 0 matches. 
    try
    {
-      deletePageLinks();
+      hideLinks();  // if no results found, an error might be thrown (access to null).
    }
    catch(error) 
    {
-       console.log("trying to delete links (page numbers) that doesn't exist." + 
-                    "It happend because the last search resulted in 0 matches"); 
+       console.log("no links to hide"); 
    }
 }
 
 // show original list by default.
 showPage(studentsList,1);
 appendPageLinks(studentsList);
+
 // add search elements.
 appendSearchElements();
