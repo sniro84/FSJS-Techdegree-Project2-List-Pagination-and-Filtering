@@ -213,6 +213,8 @@ function handleEvent(input, messageHeader)
    // sends results to the user     
    if (results === 0)
       messageHeader.innerText =  "No results were found.";
+   else if (results === 1)
+      messageHeader.innerText = "" + results + " result was found.";
    else
       messageHeader.innerText = "" + results + " results were found.";
 
