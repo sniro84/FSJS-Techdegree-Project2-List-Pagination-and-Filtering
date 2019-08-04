@@ -1,6 +1,6 @@
 /******************************************
 Treehouse FSJS Techdegree:
-project 2 - List Filter and Pagination
+Project 2 - List Filter and Pagination
 Name: Snir Holland
 Date: 15/07/2019
 ******************************************/
